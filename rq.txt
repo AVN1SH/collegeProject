@@ -1,0 +1,11 @@
+asgiref==3.8.1
+distlib==0.3.8
+Django==5.0.4
+django-rest-framework==0.1.0
+djangorestframework==3.15.1
+filelock==3.13.4
+platformdirs==4.2.0
+sqlparse==0.5.0
+tzdata==2024.1
+virtualenv==20.25.3
+virtualenvwrapper-win==1.2.7
