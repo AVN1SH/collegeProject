@@ -8,6 +8,11 @@ from users.serializers.document import Document_Serializers
 import io
 from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
+import requests
+
+api_token = 'eac15c07239a1de0ce33ff58fc5d465e055b2902'
+username = 'Arkas'
+upload_path = '/home/Arkas/documentation/photo'
 
 class Document_View(APIView):
     def get(self, request,pk=None, format=None):
@@ -25,6 +30,7 @@ class Document_View(APIView):
             print(serializer.data)
         return Response(serializer.data)
         return Response("Data not found",status=status.HTTP_400_BAD_REQUEST)
+    
     def post(self,request,format=None):
         try:
             python_data=request.data
@@ -42,18 +48,30 @@ class Document_View(APIView):
             adhar=python_data.get('adhar')
             tenth=python_data.get('tenth')
             twelth=python_data.get('twelth')
-            python_data={
-                'rid':rid,
-                'photo':photo,
-                'signatue':signatue,
-                'adhar':adhar,
-                'tenth':tenth,
-                'twelth':twelth
-            }
-            serializer=Document_Serializers(data=python_data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response("Document Uploaded Successfully",status=status.HTTP_201_CREATED)
+
+            response = requests.post(
+                f'https://www.pythonanywhere.com/api/v0/user/{username}/files/path/{upload_path}',
+                headers={'Authorization': f'Token {api_token}'},
+                files={'file': photo}
+            )
+            if response.status_code == 200:
+                print(response)
+                print('File uploaded successfully')
+            else:
+                print(f'Failed to upload file: {response.status_code}, {response.text}')
+
+            # python_data={
+            #     'rid':rid,
+            #     'photo':photo,
+            #     'signatue':signatue,
+            #     'adhar':adhar,
+            #     'tenth':tenth,
+            #     'twelth':twelth
+            # }
+            # serializer=Document_Serializers(data=python_data)
+            # if serializer.is_valid():
+            #     serializer.save()
+            #     return Response("Document Uploaded Successfully",status=status.HTTP_201_CREATED)
         except Document_model.DoesNotExist:
             return Response("Field not exits",status=status.HTTP_400_BAD_RESQUEST)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
