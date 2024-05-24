@@ -12,7 +12,7 @@ import requests
 
 api_token = 'eac15c07239a1de0ce33ff58fc5d465e055b2902'
 username = 'Arkas'
-upload_path = '/home/Arkas/documentation/photo'
+upload_path = '/home/Arkas/documentation/photo/photo.jpg'
 
 class Document_View(APIView):
     def get(self, request,pk=None, format=None):
@@ -50,9 +50,9 @@ class Document_View(APIView):
             twelth=python_data.get('twelth')
 
             response = requests.post(
-                f'https://www.pythonanywhere.com/api/v0/user/{username}/files/path/{upload_path}',
+                url=f'https://www.pythonanywhere.com/api/v0/user/{username}/files/path/{upload_path}',
                 headers={'Authorization': f'Token {api_token}'},
-                files={'file': photo}
+                files={'file': ('photo.jpg', photo.read())}
             )
             if response.status_code == 200:
                 print(response)
