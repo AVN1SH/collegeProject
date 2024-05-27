@@ -9,6 +9,10 @@ import io
 from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
 import requests
+from users.models.registration import User_Model
+from users.serializers.registration import User_Serializers
+
+
 
 api_token = 'eac15c07239a1de0ce33ff58fc5d465e055b2902'
 username = 'Arkas'
@@ -59,6 +63,20 @@ class Document_View(APIView):
                 print('File uploaded successfully')
             else:
                 print(f'Failed to upload file: {response.status_code}, {response.text}')
+                
+
+            # updated code.............
+            user=User_Model.objects.get(pk=rid)
+            serializer=User_Serializers(user,data={
+                "rid" : rid,
+                "photo" : f'https://www.pythonanywhere.com/api/v0/user/{username}/files/path/{upload_path}',
+                "signatue" : '',
+                "adhar" : '',
+                "tenth" : '',
+                "twelth" : ''
+            })
+            if serializer.is_valid():
+                serializer.save()
 
             # python_data={
             #     'rid':rid,
